@@ -8,25 +8,53 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"]
-    var correctAnswer = Int.random(in: 0...2)
+    @State var alertTitle = ""
+    @State var totalScore = 0
+    @State var showAlert = false
+    @State var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+    @State var correctAnswer = Int.random(in: 0...2)
     
     var body: some View {
-        VStack (spacing: 30){
-            VStack {
-                Text("Tap the flag of")
-                Text(countries[correctAnswer])
-            }
-            ForEach(0..<3){ number in
-                Button {
-                  // Button tapped
-                } label: {
-                    Image(countries[number])
+        ZStack {
+            Color.teal
+                .ignoresSafeArea()
+            
+            VStack (spacing: 30){
+                VStack {
+                    Text("Tap the flag of")
+                        .foregroundColor(.white)
+                    Text(countries[correctAnswer])
+                        .foregroundColor(.white)
                 }
-                
+                ForEach(0..<3){ number in
+                    Button {
+                        checkAnswer(number: number)
+                    } label: {
+                        Image(countries[number])
+                    }
+                }
             }
         }
+        .alert(alertTitle,isPresented: $showAlert) {
+            Button("Continue", action: nextQuestion)
+        } message: {
+            Text("Your Current Score is : \(totalScore)")
+        }
+    }
+    
+    func checkAnswer (number : Int) -> Void {
+        if number == correctAnswer {
+            alertTitle = "Correct"
+            totalScore += 1
+        } else {
+            alertTitle = "Wrong"
+        }
+        showAlert = true
+    }
+    
+    func nextQuestion() -> Void {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0...2)
     }
 }
 

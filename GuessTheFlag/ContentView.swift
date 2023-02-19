@@ -16,21 +16,27 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color.teal
+            LinearGradient(gradient: Gradient(colors: [.blue,.black]), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             
             VStack (spacing: 30){
                 VStack {
                     Text("Tap the flag of")
                         .foregroundColor(.white)
+                        .font(.subheadline.weight(.heavy))
                     Text(countries[correctAnswer])
                         .foregroundColor(.white)
+                        .font(.largeTitle.weight(.semibold))
                 }
                 ForEach(0..<3){ number in
                     Button {
                         checkAnswer(number: number)
                     } label: {
                         Image(countries[number])
+                            .clipShape(Capsule())
+                            .shadow(radius: 5)
+
+    
                     }
                 }
             }
@@ -38,7 +44,7 @@ struct ContentView: View {
         .alert(alertTitle,isPresented: $showAlert) {
             Button("Continue", action: nextQuestion)
         } message: {
-            Text("Your Current Score is : \(totalScore)")
+            Text("Your Current Score is \(totalScore)")
         }
     }
     
